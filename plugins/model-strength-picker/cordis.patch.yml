@@ -1,0 +1,4 @@
+- insert:
+    - id: model-strength-picker
+      name: '@local/model-strength-picker'
+      config: {}
