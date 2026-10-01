@@ -1,0 +1,4 @@
+- insert:
+    - id: dsh-ui
+      name: '@local/dsh-ui'
+      config: {}
