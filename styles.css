@@ -1,0 +1,2067 @@
+
+/* ==========================================================================
+   Antigravity 1:1 Visual Skin & Hero Layout for DeepSeek Harness
+   ========================================================================== */
+
+/* 共享弹层高度：D1 技能弹窗（.dsh-ag-skills-menu）与 D2 插件弹窗
+   （.dsh-ag-plugins-menu）固定为同一总高，保证两窗打开时视觉等高。
+   210px = 技能行 34px × 6 行 + 容器上下内边距 3px × 2；
+   调整时两处高度跟随此变量，无需分别改。 */
+:root {
+  --dsh-ag-popover-menu-h: 210px;
+}
+
+/* 1. Hero Container & Flex Stacking */
+.Dc7zOa_composerHero,
+[class*="composerHero"],
+[data-conversation-region="composer"] [class*="composerStack"] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: var(--dsh-composer-card-max-width, 1140px) !important;
+  min-width: min(680px, 100%) !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+[class*="composerHero"] > *,
+[class*="composerHero"] [data-composer-card],
+[class*="InputBar_root"],
+[class*="_root"]:has([data-composer-card]) {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 侧栏开关（E2）收起时锁定欢迎区宽度：卡片/工作区行/底部灰条保持"展开态"
+   的宽度，不随中栏变宽而拉宽，只整体重新居中（对齐 ChatGPT 桌面版行为）。
+   --dsh-hero-lock-w 由 client.js 在展开态持续记录欢迎区实际宽度；
+   冷启动即处于收起态且无记录时回退 1140px，展开一次后即校准。 */
+.BynINW_frame[data-sidebar-collapsed] .Dc7zOa_composerHero,
+.BynINW_frame[data-sidebar-collapsed] [class*="composerHero"],
+[class*="_frame"][data-sidebar-collapsed] .Dc7zOa_composerHero,
+[class*="_frame"][data-sidebar-collapsed] [class*="composerHero"],
+html.dsh-native-host-mode .Dc7zOa_composerHero,
+html.dsh-native-host-mode [class*="composerHero"] {
+  max-width: min(var(--dsh-hero-lock-w, var(--dsh-composer-card-max-width, 1140px)), 100%) !important;
+  min-width: min(680px, 100%) !important;
+}
+
+/* 会话模式同机制：锁定目标 = 消息线程 + 输入卡片的最低公共祖先列
+   （client.js 运行时发现并打标记类 dsh-conv-lock-target），展开态记录
+   --dsh-conv-lock-w，收起态封顶并 margin:auto 居中；再展开恢复原宽。
+   CSS 随 data-sidebar-collapsed 属性即时收放，不依赖扫描触发。 */
+.BynINW_frame[data-sidebar-collapsed] .dsh-conv-lock-target,
+[class*="_frame"][data-sidebar-collapsed] .dsh-conv-lock-target,
+html.dsh-native-host-mode .dsh-conv-lock-target {
+  max-width: min(var(--dsh-conv-lock-w, var(--dsh-composer-card-max-width, 1140px)), 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 2. Top Hero Headline (DeepSeek Logo + 探索未至之境 + 预览版) */
+.Hqq-bq_root {
+  order: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-bottom: 22px !important;
+  padding: 0 !important;
+}
+
+.Hqq-bq_headline {
+  font-size: 26px !important;
+  font-weight: 500 !important;
+  color: #0E1014 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.Hqq-bq_fish {
+  color: #0E1014 !important;
+  width: 38px !important;
+  height: 28px !important;
+}
+
+.Hqq-bq_previewBadge {
+  background: #EEF2FB !important;
+  color: #2F54EB !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  border: 0.5px solid rgba(47, 84, 235, 0.18) !important;
+  margin-top: 2px !important;
+  font-family: inherit !important;
+  line-height: 18px !important;
+}
+
+/* 3. Composer Input Card (White Box) */
+.RlGAzG_root,
+[class*="InputBar_root"] {
+  order: 3 !important;
+  width: 100% !important;
+  max-width: var(--dsh-composer-card-max-width, 1140px) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.RlGAzG_root:focus-within,
+.RlGAzG_root:has([class*="MenuView_menu"]),
+.RlGAzG_root:has([class*="overlayAnchor"] > *),
+[class*="InputBar_root"]:has([class*="overlayAnchor"] > *) {
+  z-index: 1000 !important;
+}
+
+.RlGAzG_card,
+[data-composer-card] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: var(--dsh-composer-card-max-width, 1140px) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  padding: 16px 18px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  position: relative !important;
+  z-index: 20 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+
+/* Focus or non-hero standalone card */
+:not(.Dc7zOa_composerHero):not([class*="composerHero"]) .RlGAzG_card,
+:not(.Dc7zOa_composerHero):not([class*="composerHero"]) [data-composer-card] {
+  border-radius: 24px !important;
+}
+
+.RlGAzG_card:focus-within,
+[data-composer-card]:focus-within {
+  border-color: #D1D5DB !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 4. Textarea & Placeholder */
+.RlGAzG_input {
+  min-height: 48px !important;
+  font-size: 15px !important;
+  line-height: 24px !important;
+  color: #111827 !important;
+  caret-color: #2F6FED !important;
+  padding: 2px 4px !important;
+  outline: none !important;
+}
+
+.RlGAzG_placeholder {
+  font-size: 15px !important;
+  line-height: 24px !important;
+  color: #9CA3AF !important;
+  padding: 2px 4px !important;
+}
+
+/* 5. Tool Row Inside Card */
+.RlGAzG_row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 4px 0 0 !important;
+  margin: 0 !important;
+}
+
+.RlGAzG_tools {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* '+' Command button */
+.RlGAzG_add {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: #F4F5F6 !important;
+  color: #374151 !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease !important;
+  padding: 0 !important;
+}
+.RlGAzG_add:hover {
+  background: #EAEBED !important;
+}
+.RlGAzG_add svg {
+  width: 14px !important;
+  height: 14px !important;
+  color: #4B5563 !important;
+}
+
+/* Permission selector chip (工作区内修改) */
+[class*="triggerLabel"],
+    [class*="permission"] button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 13px !important;
+  color: #4B5563 !important;
+  font-weight: 400 !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 3px 6px !important;
+  line-height: 20px !important;
+}
+[class*="permission"] button:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 6. Trailing Controls (Model selector + Send button) */
+.RlGAzG_trailing {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-left: auto !important;
+}
+
+.RlGAzG_standardControls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Model selector trigger */
+.msp-trigger,
+    button[aria-label*="模型"],
+    button[aria-label*="Model"] {
+  font-size: 13px !important;
+  color: #4B5563 !important;
+  height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 0 6px !important;
+  cursor: pointer !important;
+}
+.msp-trigger:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Send / Primary Button (Circle with blue background and white arrow up) */
+.RlGAzG_primary,
+    button[aria-label="发送"],
+    button[aria-label="Send"],
+    button[aria-label="停止"],
+    button[aria-label="Stop"] {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 999px !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.1s ease !important;
+}
+
+/* 1) Enabled / Active State (when text is entered in input, matches Screenshot 2) */
+.RlGAzG_primary:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    .RlGAzG_primary[data-has-content="true"],
+    button[aria-label="发送"]:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="发送"][data-has-content="true"],
+    button[aria-label="Send"]:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="Send"][data-has-content="true"],
+    button[aria-label="停止"]:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="Stop"]:not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  background: var(--dsw-alias-button-info-fill, #4176E6) !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* 2) Hover State when Enabled */
+.RlGAzG_primary:hover:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    .RlGAzG_primary[data-has-content="true"]:hover,
+    button[aria-label="发送"]:hover:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="发送"][data-has-content="true"]:hover,
+    button[aria-label="Send"]:hover:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="Send"][data-has-content="true"]:hover,
+    button[aria-label="停止"]:hover:not(:disabled):not([disabled]):not([aria-disabled="true"]),
+    button[aria-label="Stop"]:hover:not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  background: var(--dsw-alias-button-info-hover, #3464CB) !important;
+  opacity: 1 !important;
+}
+
+/* 3) Click / Press State when Enabled */
+.RlGAzG_primary:active:not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  background: #2F5ECD !important;
+  transform: scale(0.96) !important;
+}
+
+/* 4) Disabled State (when input is empty, matches Screenshot 1: #B2C7F4) */
+.RlGAzG_primary:disabled,
+    .RlGAzG_primary[disabled]:not([data-has-content="true"]),
+    .RlGAzG_primary[aria-disabled="true"]:not([data-has-content="true"]),
+    button[aria-label="发送"]:disabled,
+    button[aria-label="发送"][disabled]:not([data-has-content="true"]),
+    button[aria-label="发送"][aria-disabled="true"]:not([data-has-content="true"]),
+    button[aria-label="Send"]:disabled,
+    button[aria-label="Send"][disabled]:not([data-has-content="true"]),
+    button[aria-label="Send"][aria-disabled="true"]:not([data-has-content="true"]) {
+  background: #B2C7F4 !important;
+  opacity: 1 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+/* 5) Send Arrow & Stop Icons */
+.RlGAzG_primary svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: currentColor !important;
+  stroke: none !important;
+  display: block !important;
+}
+
+.RlGAzG_primary svg path,
+    .RlGAzG_primary svg rect {
+  fill: #FFFFFF !important;
+  stroke: none !important;
+}
+
+/* 7. Top-Left Workspace & Preset Row (工作区选择 + 标准模式 — 位于输入框左上方默认位置，图层置底固定) */
+.Dc7zOa_heroWorkspaceRow,
+[class*="heroWorkspaceRow"] {
+  order: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  width: 100% !important;
+  max-width: var(--dsh-composer-card-max-width, 1140px) !important;
+  margin: 0 auto 10px auto !important;
+  padding: 0 4px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: auto !important;
+  min-height: 28px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 1 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Elevate z-index only when workspace or preset dropdown menu is actively opened */
+.Dc7zOa_heroWorkspaceRow:focus-within,
+[class*="heroWorkspaceRow"]:focus-within,
+.Dc7zOa_heroWorkspaceRow:has([aria-expanded="true"]),
+[class*="heroWorkspaceRow"]:has([aria-expanded="true"]),
+.Dc7zOa_heroWorkspaceRow:has([role="menu"]),
+[class*="heroWorkspaceRow"]:has([role="menu"]) {
+  z-index: 50 !important;
+}
+
+/* Neutralize phantom workspace slot spacing while preserving menu anchor */
+.Dc7zOa_heroWorkspaceRow > [data-slot="conversation.hero.workspace"],
+[class*="heroWorkspaceRow"] > [data-slot="conversation.hero.workspace"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* Agent preset slot and menu anchor: inline-flex, natural width */
+.Dc7zOa_heroWorkspaceRow > [data-slot="conversation.hero.agentPreset"],
+[class*="heroWorkspaceRow"] > [data-slot="conversation.hero.agentPreset"],
+.Dc7zOa_heroWorkspaceRow [class*="menuAnchor"],
+[class*="heroWorkspaceRow"] [class*="menuAnchor"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  flex: none !important;
+}
+
+/* Chips in top-left row: adaptive text width, no jitter, clear spacing */
+.Hqq-bq_workspace,
+    ._oGoKq_seat,
+    .Dc7zOa_heroWorkspaceRow button,
+    [class*="heroWorkspaceRow"] button {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #374151 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 8px !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  line-height: 20px !important;
+  font-family: inherit !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  width: auto !important;
+  min-width: unset !important;
+  max-width: 320px !important;
+  box-sizing: border-box !important;
+  flex: none !important;
+  transition: background-color 0.12s ease !important;
+}
+
+.Hqq-bq_workspace:hover,
+    ._oGoKq_seat:hover,
+    .Dc7zOa_heroWorkspaceRow button:hover,
+    [class*="heroWorkspaceRow"] button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.Hqq-bq_workspaceLabel,
+    ._oGoKq_seatLabel {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: unset !important;
+  max-width: 220px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 20px !important;
+  height: 20px !important;
+  vertical-align: middle !important;
+  text-align: left !important;
+}
+
+/* Chevrons in top-left row: visible, clean, responsive */
+.Dc7zOa_heroWorkspaceRow [class*="chevron"],
+[class*="heroWorkspaceRow"] [class*="chevron"],
+.Dc7zOa_heroWorkspaceRow .Hqq-bq_chevron,
+[class*="heroWorkspaceRow"] .Hqq-bq_chevron,
+.Dc7zOa_heroWorkspaceRow ._oGoKq_chevron,
+[class*="heroWorkspaceRow"] ._oGoKq_chevron,
+.Dc7zOa_heroWorkspaceRow button > svg:last-child:not(:first-child),
+[class*="heroWorkspaceRow"] button > svg:last-child:not(:first-child) {
+  display: inline-block !important;
+  width: 12px !important;
+  height: 12px !important;
+  color: #6B7280 !important;
+  flex: none !important;
+  margin-left: 2px !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.12s ease !important;
+}
+
+.Dc7zOa_heroWorkspaceRow button:hover [class*="chevron"],
+[class*="heroWorkspaceRow"] button:hover [class*="chevron"] {
+  opacity: 1 !important;
+}
+
+/* Fine-tuned custom icons */
+.dsh-ag-workspace-icon,
+    .dsh-ag-mode-icon,
+    .dsh-ag-skill-icon,
+    .dsh-ag-plugin-icon,
+    .Dc7zOa_heroWorkspaceRow button svg:first-child,
+    [class*="heroWorkspaceRow"] button svg:first-child,
+    .Hqq-bq_folder,
+    ._oGoKq_seatIcon {
+  width: 15px !important;
+  height: 13px !important;
+  min-width: 15px !important;
+  min-height: 13px !important;
+  max-width: 15px !important;
+  max-height: 13px !important;
+  color: #4B5563 !important;
+  flex: none !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Disable AgentPresetSeat intro character stagger and icon scaling animations */
+._oGoKq_introIcon,
+    [class*="introIcon"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+._oGoKq_introText,
+    [class*="introText"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+._oGoKq_introChar,
+    [class*="introChar"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  display: inline-block !important;
+  animation-delay: 0s !important;
+}
+
+@keyframes _oGoKq_seat-icon-in {
+  0%, 100% { opacity: 1 !important; transform: none !important; }
+}
+
+@keyframes _oGoKq_seat-char-in {
+  0%, 100% { opacity: 1 !important; transform: none !important; }
+}
+
+/* 8. Attached Bottom Bar on Grey Block (插件 | 技能 靠左从左到右排列，创建新对话时展示) */
+.dsh-ag-bottom-bar {
+  order: 4 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: calc(100% - 36px) !important;
+  max-width: calc(var(--dsh-composer-card-max-width, 1140px) - 36px) !important;
+  background: #F3F3F3 !important;
+  border-radius: 0 0 16px 16px !important;
+  padding: 14px 16px 0 16px !important;
+  height: 62px !important;
+  min-height: 62px !important;
+  box-sizing: border-box !important;
+  margin: -14px auto 0 auto !important;
+  border-top: none !important;
+  border-left: 1px solid #E5E7EB !important;
+  border-right: 1px solid #E5E7EB !important;
+  border-bottom: 1px solid #E5E7EB !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  z-index: 1 !important;
+  position: relative !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.dsh-ag-bottom-bar .dsh-ag-skill-chip,
+.dsh-ag-bottom-bar .dsh-ag-plugin-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #374151 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 10px !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  line-height: 20px !important;
+  font-family: inherit !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  box-sizing: border-box !important;
+  flex: none !important;
+  transition: background-color 0.12s ease !important;
+}
+
+.dsh-ag-bottom-bar .dsh-ag-skill-chip:hover,
+.dsh-ag-bottom-bar .dsh-ag-plugin-chip:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 8. Unify Menus (Preset & Skills to match Workspace Menu) */
+/* Preset Menu (AgentPresetSeat) refinement to single-line row */
+._oGoKq_itemDesc {
+  display: none !important;
+}
+
+._oGoKq_item {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+._oGoKq_itemName {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--dsw-alias-label-primary, #111827) !important;
+  line-height: 20px !important;
+  white-space: nowrap !important;
+}
+
+.dsh-ag-mode-menu-icon {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  color: var(--dsw-alias-label-tertiary, #4B5563) !important;
+  flex: none !important;
+  justify-content: center !important;
+  align-items: center !important;
+  display: inline-flex !important;
+  margin-right: 6px !important;
+}
+
+.dsh-ag-mode-menu-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Skills Menu (Matching native Harness _3tUStW Menu) */
+.dsh-ag-skills-menu {
+  box-sizing: border-box !important;
+  background: var(--dsw-specific-menu, rgba(248, 249, 250, 0.94)) !important;
+  backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px)) !important;
+  -webkit-backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px)) !important;
+  --dsw-elevation-stroke-color: var(--dsw-alias-border-l1, rgba(0, 0, 0, 0.08)) !important;
+  box-shadow: var(--dsw-elevation-prominent, 0 0 0 0.5px rgba(0,0,0,0.08), 0 3px 8px 0 rgba(0,0,0,0.04), 0 0 20px 0 rgba(0,0,0,0.05)) !important;
+  z-index: 1100 !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  min-width: 170px !important;
+  max-width: 320px !important;
+  padding: 3px !important;
+  display: flex !important;
+  position: fixed !important;
+  user-select: none !important;
+  animation: dsh-ag-menu-pop-in 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  height: var(--dsh-ag-popover-menu-h, 210px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow: hidden !important;
+}
+
+@keyframes dsh-ag-menu-pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.dsh-ag-skills-menu ._3tUStW_viewport {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  gap: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_itemWrap {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_item {
+  cursor: pointer !important;
+  width: 100% !important;
+  min-height: 34px !important;
+  color: var(--dsw-alias-label-primary, #111827) !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+  line-height: 20px !important;
+  display: flex !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.1s ease !important;
+  font-family: inherit !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_item:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05)) !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_itemIcon {
+  width: 14px !important;
+  height: 14px !important;
+  color: var(--dsw-alias-label-tertiary, #4B5563) !important;
+  flex: none !important;
+  justify-content: center !important;
+  align-items: center !important;
+  display: inline-flex !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_itemLabel {
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--dsw-alias-label-primary, #111827) !important;
+}
+
+.dsh-ag-skills-menu ._3tUStW_check {
+  display: none !important;
+}
+
+/* 9. Plugins Menu (matching native Harness menu style) */
+/* 9. Plugins Popover (matching skills & exec target card size and style) */
+.dsh-ag-plugins-menu {
+  box-sizing: border-box !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 16px !important;
+  width: 220px !important;
+  min-width: 200px !important;
+  max-width: 240px !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: fixed !important;
+  user-select: none !important;
+  z-index: 1200 !important;
+  animation: dsh-ag-menu-pop-in 0.14s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  height: var(--dsh-ag-popover-menu-h, 210px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow: hidden !important;
+}
+
+/* Scrollable Plugin List（弹性填充容器剩余高度，超出滚动；总高由容器统一变量控制） */
+.dsh-ag-plugins-list {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 4px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+}
+
+.dsh-ag-plugins-list::-webkit-scrollbar {
+  width: 4px !important;
+}
+.dsh-ag-plugins-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.dsh-ag-plugins-list::-webkit-scrollbar-thumb {
+  background: #E5E7EB !important;
+  border-radius: 999px !important;
+}
+.dsh-ag-plugins-list::-webkit-scrollbar-thumb:hover {
+  background: #D1D5DB !important;
+}
+
+/* Plugin row item */
+.dsh-ag-plugin-item {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  color: #1F2937 !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 8px !important;
+  display: flex !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.12s ease !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  margin-bottom: 1px !important;
+}
+
+.dsh-ag-plugin-item:hover {
+  background: #F4F5F7 !important;
+}
+
+.dsh-ag-plugin-item-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.dsh-ag-plugin-item-icon {
+  width: 16px !important;
+  height: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+}
+
+.dsh-ag-plugin-item-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+  display: block !important;
+}
+
+.dsh-ag-plugin-item-name {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #1F2937 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Empty state */
+.dsh-ag-plugins-empty {
+  font-size: 12px !important;
+  color: #9CA3AF !important;
+  text-align: center !important;
+  padding: 16px 10px !important;
+  display: none;
+}
+
+/* 10. Toggle Switch (滑块拨动开关 - 1:1匹配截图) */
+.dsh-ag-toggle-switch {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  width: 30px !important;
+  height: 17px !important;
+  min-width: 30px !important;
+  max-width: 30px !important;
+  background-color: #D1D5DB !important;
+  border-radius: 999px !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  flex: none !important;
+  user-select: none !important;
+  outline: none !important;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.dsh-ag-toggle-switch:hover {
+  background-color: #9CA3AF !important;
+}
+
+.dsh-ag-toggle-switch.dsh-ag-toggle-on {
+  background-color: #2F6FED !important;
+}
+
+.dsh-ag-toggle-switch.dsh-ag-toggle-on:hover {
+  background-color: #2558CA !important;
+}
+
+.dsh-ag-toggle-thumb {
+  position: absolute !important;
+  top: 1.5px !important;
+  left: 2px !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  transform: translateX(0) !important;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none !important;
+}
+
+.dsh-ag-toggle-switch.dsh-ag-toggle-on .dsh-ag-toggle-thumb {
+  transform: translateX(12px) !important;
+}
+
+/* Bottom Fixed Action Bar: 插件市场 > */
+.dsh-ag-plugins-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 10px !important;
+  border-top: 1px solid #F3F4F6 !important;
+  background: #FFFFFF !important;
+  cursor: pointer !important;
+  transition: background-color 0.12s ease !important;
+  box-sizing: border-box !important;
+}
+
+.dsh-ag-plugins-footer:hover {
+  background: #F9FAFB !important;
+}
+
+.dsh-ag-plugins-footer-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  color: #1F2937 !important;
+  font-weight: 400 !important;
+}
+
+.dsh-ag-plugins-footer-left svg {
+  width: 14px !important;
+  height: 12px !important;
+  min-width: 14px !important;
+  min-height: 12px !important;
+  color: #4B5563 !important;
+  flex: none !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+}
+
+.dsh-ag-footer-chevron {
+  width: 13px !important;
+  height: 13px !important;
+  color: #9CA3AF !important;
+  flex: none !important;
+}
+
+/* 11. Execution Target (此聊天要在哪里运行？ - 底部灰色块右边纯图标按钮与弹窗) */
+.dsh-ag-exec-target-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  margin: 0 0 0 auto !important;
+  padding: 0 !important;
+  color: #4B5563 !important;
+  line-height: 1 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.12s ease, transform 0.1s ease !important;
+  outline: none !important;
+}
+
+.dsh-ag-exec-target-btn:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #111827 !important;
+}
+
+.dsh-ag-exec-target-btn.active,
+.dsh-ag-exec-target-btn:active {
+  background: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+.dsh-ag-exec-popover {
+  position: fixed !important;
+  width: 324px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  padding: 16px 14px 12px 14px !important;
+  z-index: 10002 !important;
+  box-sizing: border-box !important;
+  user-select: none !important;
+  font-family: inherit !important;
+  --dsh-ag-exec-scale: 1;
+  transform: scale(var(--dsh-ag-exec-scale, 1)) !important;
+  transform-origin: top right !important;
+  animation: dsh-ag-exec-pop-in 0.14s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes dsh-ag-exec-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(calc(var(--dsh-ag-exec-scale, 1) * 0.96)) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(var(--dsh-ag-exec-scale, 1)) translateY(0);
+  }
+}
+
+.dsh-ag-exec-title {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #6B7280 !important;
+  padding: 0 6px 12px 6px !important;
+  line-height: 20px !important;
+}
+
+.dsh-ag-exec-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.dsh-ag-exec-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 10px 8px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: background-color 0.12s ease !important;
+}
+
+.dsh-ag-exec-item:hover {
+  background: #F3F4F6 !important;
+}
+
+.dsh-ag-exec-icon {
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #374151 !important;
+  flex: none !important;
+  margin-top: 1px !important;
+}
+
+.dsh-ag-exec-icon svg {
+  width: 20px !important;
+  height: 17px !important;
+}
+
+.dsh-ag-exec-text {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.dsh-ag-exec-name {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #111827 !important;
+  line-height: 20px !important;
+}
+
+.dsh-ag-exec-desc {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #9CA3AF !important;
+  line-height: 18px !important;
+}
+
+.dsh-ag-exec-check {
+  width: 20px !important;
+  height: 20px !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  color: #374151 !important;
+  margin-top: 2px !important;
+}
+
+.dsh-ag-exec-item.dsh-ag-exec-selected .dsh-ag-exec-check {
+  display: flex !important;
+}
+
+/* 12. Toggle failure feedback (inline red flash + switch shake, auto-clears) */
+.dsh-ag-plugin-item.dsh-ag-toggle-failed .dsh-ag-plugin-item-name {
+  color: #DC2626 !important;
+}
+
+.dsh-ag-toggle-error {
+  flex: none !important;
+  font-size: 11px !important;
+  color: #DC2626 !important;
+  margin-left: 2px !important;
+  animation: dsh-ag-error-fade 1.6s ease forwards !important;
+}
+
+@keyframes dsh-ag-error-fade {
+  0%, 55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.dsh-ag-toggle-switch.dsh-ag-toggle-shake {
+  animation: dsh-ag-toggle-shake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
+}
+
+@keyframes dsh-ag-toggle-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
+/* Deferred success (write landed, page needs a reload to show it):
+   amber actionable hint, no shake, 8s dwell so there is time to click. */
+.dsh-ag-plugin-item.dsh-ag-toggle-deferred .dsh-ag-plugin-item-name {
+  color: #B45309 !important;
+}
+
+.dsh-ag-plugin-item.dsh-ag-toggle-deferred .dsh-ag-toggle-error {
+  color: #B45309 !important;
+  animation-duration: 8s !important;
+}
+
+.dsh-ag-toggle-error.dsh-ag-toggle-action {
+  cursor: pointer !important;
+  text-decoration: underline !important;
+  text-decoration-style: dotted !important;
+  text-underline-offset: 2px !important;
+}
+
+.dsh-ag-toggle-error.dsh-ag-toggle-action:hover {
+  text-decoration-style: solid !important;
+}
+
+/* 13. Dark theme. The app theme preference is "system", so the webview's
+       prefers-color-scheme tracks the OS; these rules sit last and win over
+       the light values above at equal specificity. */
+@media (prefers-color-scheme: dark) {
+  /* Hero */
+  .Hqq-bq_headline { color: #ECEDEE !important; }
+  .Hqq-bq_fish { color: #ECEDEE !important; }
+  .Hqq-bq_previewBadge {
+    background: rgba(78, 110, 240, 0.16) !important;
+    color: #93ADF9 !important;
+    border-color: rgba(147, 173, 249, 0.28) !important;
+  }
+
+  /* Composer card */
+  .RlGAzG_card, [data-composer-card] {
+    background: #1C1E21 !important;
+    border-color: #2E3134 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  }
+  .RlGAzG_card:focus-within, [data-composer-card]:focus-within {
+    border-color: #3A3E44 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  }
+  .RlGAzG_input { color: #ECEDEE !important; }
+  .RlGAzG_placeholder { color: #6C6F73 !important; }
+  .RlGAzG_add { background: #26282C !important; color: #B4B7BB !important; }
+  .RlGAzG_add:hover { background: #2E3136 !important; }
+  .RlGAzG_add svg { color: #B4B7BB !important; }
+  [class*="triggerLabel"], [class*="permission"] button { color: #B4B7BB !important; }
+  [class*="permission"] button:hover { background: rgba(255, 255, 255, 0.06) !important; }
+  .msp-trigger, button[aria-label*="模型"], button[aria-label*="Model"] { color: #B4B7BB !important; }
+  .msp-trigger:hover { background: rgba(255, 255, 255, 0.06) !important; }
+  .RlGAzG_primary:disabled,
+    .RlGAzG_primary[disabled]:not([data-has-content="true"]),
+    .RlGAzG_primary[aria-disabled="true"]:not([data-has-content="true"]),
+    button[aria-label="发送"]:disabled,
+    button[aria-label="Send"]:disabled,
+    button[aria-label="停止"]:disabled,
+    button[aria-label="Stop"]:disabled {
+    background: rgba(65, 118, 230, 0.32) !important;
+  }
+
+  /* Workspace row */
+  .Hqq-bq_workspace, ._oGoKq_seat,
+    .Dc7zOa_heroWorkspaceRow button, [class*="heroWorkspaceRow"] button {
+    color: #B4B7BB !important;
+  }
+  .Hqq-bq_workspace:hover, ._oGoKq_seat:hover,
+    .Dc7zOa_heroWorkspaceRow button:hover, [class*="heroWorkspaceRow"] button:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+  .Dc7zOa_heroWorkspaceRow [class*="chevron"], [class*="heroWorkspaceRow"] [class*="chevron"],
+    .Dc7zOa_heroWorkspaceRow .Hqq-bq_chevron, [class*="heroWorkspaceRow"] .Hqq-bq_chevron,
+    .Dc7zOa_heroWorkspaceRow ._oGoKq_chevron, [class*="heroWorkspaceRow"] ._oGoKq_chevron,
+    .Dc7zOa_heroWorkspaceRow button > svg:last-child:not(:first-child),
+    [class*="heroWorkspaceRow"] button > svg:last-child:not(:first-child) {
+    color: #8A8D91 !important;
+  }
+  .dsh-ag-workspace-icon, .dsh-ag-mode-icon, .dsh-ag-skill-icon, .dsh-ag-plugin-icon,
+    .Dc7zOa_heroWorkspaceRow button svg:first-child, [class*="heroWorkspaceRow"] button svg:first-child,
+    .Hqq-bq_folder, ._oGoKq_seatIcon {
+    color: #B4B7BB !important;
+  }
+
+  /* Bottom bar */
+  .dsh-ag-bottom-bar {
+    background: #17181B !important;
+    border-left: 1px solid #2E3134 !important;
+    border-right: 1px solid #2E3134 !important;
+    border-bottom: 1px solid #2E3134 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  }
+  .dsh-ag-bottom-bar .dsh-ag-skill-chip, .dsh-ag-bottom-bar .dsh-ag-plugin-chip {
+    color: #B4B7BB !important;
+  }
+  .dsh-ag-bottom-bar .dsh-ag-skill-chip:hover, .dsh-ag-bottom-bar .dsh-ag-plugin-chip:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Skills menu (fallbacks for the host --dsw variables) */
+  .dsh-ag-skills-menu { background: rgba(28, 30, 33, 0.94) !important; }
+  .dsh-ag-skills-menu ._3tUStW_item { color: #ECEDEE !important; }
+  .dsh-ag-skills-menu ._3tUStW_itemIcon { color: #B4B7BB !important; }
+  .dsh-ag-skills-menu ._3tUStW_itemLabel { color: #ECEDEE !important; }
+  .dsh-ag-skills-menu ._3tUStW_item:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06) !important; }
+
+  /* Plugins menu */
+  .dsh-ag-plugins-menu {
+    background: #1C1E21 !important;
+    border-color: #2E3134 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55), 0 8px 10px -6px rgba(0, 0, 0, 0.45) !important;
+  }
+  .dsh-ag-plugins-list::-webkit-scrollbar-thumb { background: #3A3D42 !important; }
+  .dsh-ag-plugins-list::-webkit-scrollbar-thumb:hover { background: #4A4E54 !important; }
+  .dsh-ag-plugin-item { color: #ECEDEE !important; }
+  .dsh-ag-plugin-item:hover { background: rgba(255, 255, 255, 0.06) !important; }
+  .dsh-ag-plugin-item-name { color: #ECEDEE !important; }
+  .dsh-ag-plugins-empty { color: #8A8D91 !important; }
+  .dsh-ag-plugins-footer {
+    border-top: 1px solid #26282C !important;
+    background: #1C1E21 !important;
+  }
+  .dsh-ag-plugins-footer:hover { background: #222428 !important; }
+  .dsh-ag-plugins-footer-left { color: #ECEDEE !important; }
+  .dsh-ag-plugins-footer-left svg { color: #B4B7BB !important; }
+  .dsh-ag-footer-chevron { stroke: #8A8D91 !important; }
+
+  /* Toggle switch (off state) */
+  .dsh-ag-toggle-switch { background-color: #3A3E44 !important; }
+  .dsh-ag-toggle-switch:hover { background-color: #4A4E54 !important; }
+
+  /* Toggle failure / deferred hints */
+  .dsh-ag-plugin-item.dsh-ag-toggle-failed .dsh-ag-plugin-item-name { color: #F87171 !important; }
+  .dsh-ag-toggle-error { color: #F87171 !important; }
+  .dsh-ag-plugin-item.dsh-ag-toggle-deferred .dsh-ag-plugin-item-name { color: #F5B04D !important; }
+  .dsh-ag-plugin-item.dsh-ag-toggle-deferred .dsh-ag-toggle-error { color: #F5B04D !important; }
+
+  /* Execution target */
+  .dsh-ag-exec-target-btn { color: #B4B7BB !important; }
+  .dsh-ag-exec-target-btn:hover { background: rgba(255, 255, 255, 0.06) !important; color: #ECEDEE !important; }
+  .dsh-ag-exec-target-btn.active, .dsh-ag-exec-target-btn:active {
+    background: #2E3136 !important;
+    color: #ECEDEE !important;
+  }
+  .dsh-ag-exec-popover {
+    background: #1C1E21 !important;
+    border-color: #2E3134 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55), 0 8px 10px -6px rgba(0, 0, 0, 0.45) !important;
+  }
+  .dsh-ag-exec-title { color: #8A8D91 !important; }
+  .dsh-ag-exec-item:hover { background: rgba(255, 255, 255, 0.05) !important; }
+  .dsh-ag-exec-icon { color: #B4B7BB !important; }
+  .dsh-ag-exec-name { color: #ECEDEE !important; }
+  .dsh-ag-exec-desc { color: #8A8D91 !important; }
+  .dsh-ag-exec-check { color: #B4B7BB !important; }
+  .dsh-ag-exec-check svg { stroke: #B4B7BB !important; }
+}
+
+/* ==========================================================================
+   14. Fixed Icon Rail（ChatGPT 桌面版同款最左固定图标栏）
+   ========================================================================== */
+
+/* 把整个应用框架右移，让出左侧 64px 固定栏 */
+.BynINW_frame {
+  margin-left: 64px !important;
+}
+
+/* 明确锁死 3 列网格归属，防止绝对定位或托管态导致 centerCol 串入第 1 列（0px 列）发生横向位移与挤压 */
+[class*="_sidebarCol"] {
+  grid-column: 1 !important;
+}
+[class*="_centerCol"] {
+  grid-column: 2 !important;
+}
+[class*="_rightbarCol"] {
+  grid-column: 3 !important;
+}
+
+/* S 区与 C 区交界分隔线（浅色主题 #f5f5f5 实线，深色跟随宿主边框色）；收起态中栏贴边，不画线 */
+html[data-windows-titlebar] .BynINW_frame:not([data-sidebar-collapsed]) .BynINW_sidebarCol {
+  border-right: 2px solid var(--dsw-alias-border-l3, rgba(0, 0, 0, 0.08)) !important;
+}
+html[data-windows-titlebar] body:not([data-ds-dark-theme]) .BynINW_frame:not([data-sidebar-collapsed]) .BynINW_sidebarCol {
+  border-right-color: #f5f5f5 !important;
+}
+
+/* S 区（侧栏列）底色统一为 C 区（中央内容区）同款纯白 #FFFFFF：
+   在列上改写 --dsw-specific-sidebar-fill，列内整棵子树（含原生拖拽条
+   .BynINW_handle 等引用该变量的元素）一并跟随，避免列体变白后顶部
+   残留 48px 灰条；仅浅色主题，深色主题维持宿主原生配色 */
+body:not([data-ds-dark-theme]) .BynINW_sidebarCol {
+  --dsw-specific-sidebar-fill: #FFFFFF !important;
+  background: #FFFFFF !important;
+}
+
+/* 展开态下 C 区左上角为直角（配合分隔线，与参考图一致）；收起态保留原生 16px 圆角 */
+html[data-windows-titlebar] .BynINW_frame:not([data-sidebar-collapsed]) .BynINW_centerCol {
+  border-radius: 0 !important;
+}
+
+/* S 区（侧栏列）与中栏同款左上圆角：展开态下「标题栏×固定栏」夹角的圆角
+   与收起态（中栏圆角）一致，缺口处统一露出 #f5f5f5 底色 */
+html[data-windows-titlebar] .BynINW_sidebarCol {
+  border-top-left-radius: var(--dsh-windows-content-radius, 16px);
+}
+
+/* 标题栏底色同步为 #f5f5f5（原生标题条 = frame 的 :before 伪元素 + frame 自身背景；
+   仅浅色主题生效，深色主题继续使用宿主 --dsw-specific-sidebar-fill） */
+body:not([data-ds-dark-theme]) .BynINW_frame:before {
+  background: #f5f5f5 !important;
+}
+html[data-windows-titlebar] body:not([data-ds-dark-theme]) .BynINW_frame {
+  background: #f5f5f5 !important;
+}
+
+/* 左上角历史导航：贴窗口最左上角，位于固定栏顶部拖拽区之内（视频同款位置） */
+#dsh-ui-navbtns {
+  position: fixed;
+  top: 0;
+  left: 10px;
+  height: var(--dsh-windows-titlebar-height, 48px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 1105;
+  pointer-events: none;
+}
+
+.dsh-navbtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--dsw-alias-label-secondary, #5d5d5d);
+  padding: 0;
+  position: relative;
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
+  box-sizing: border-box;
+  transition: background-color 0.12s ease, color 0.12s ease, opacity 0.12s ease;
+}
+
+.dsh-navbtn:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+  color: var(--dsw-alias-label-primary, #0d0d0d);
+}
+
+.dsh-navbtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.dsh-navbtn:disabled:hover {
+  background: transparent;
+  color: var(--dsw-alias-label-secondary, #5d5d5d);
+}
+
+.dsh-navbtn svg {
+  display: block;
+  pointer-events: none;
+}
+
+/* 标题栏内的 tooltip 显示在按钮下方；左对齐避免靠近左边界时被窗口裁切 */
+.dsh-navbtn::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  transform: none;
+  background: #0d0d0d;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease 0.45s;
+  z-index: 1105;
+}
+
+.dsh-navbtn:hover::after {
+  opacity: 1;
+}
+
+.dsh-navbtn-toggle {
+  margin-left: 6px;
+}
+
+/* 原生与全局 Tooltip 提示层层级提升，彻底防止被最左侧 64px 固定栏（z-index: 1001）遮挡截断 */
+[role="tooltip"],
+[class*="bubble"][role="tooltip"] {
+  z-index: 1105 !important;
+}
+
+/* 标题栏元素避让与对齐：
+   [← → 10-68] [侧栏开关 70-98] [常驻 ⊕ 100-128] [菜单 144+]；
+   v1.1.33：⊕ 新建会话为自绘常驻按钮（第 4 个导航按钮，两态常驻）——宿主的
+   newSession 是同一节点随侧栏状态在「标题栏浮动圆钮」与「侧栏胶囊」间切换，
+   无法常驻；常驻职责改由自绘 ⊕ 接管（动作走 railGoHome → 原生 startSession），
+   宿主收起态浮动圆钮防重复隐藏，侧栏展开态原生胶囊照常显示（v1.1.30 需求）。
+   菜单常驻 144px 靠左对齐（两态同值），彻底消除抽屉开合或侧栏收放时的
+   菜单左右位移跳动；
+   原生侧栏开关按钮隐藏（由 #dsh-ui-navbtns 常驻开关按钮接管，避免托管抽屉
+   动画包含块位移闪跳） */
+[data-windows-titlebar] ._2H3hWW_toggle,
+[data-windows-titlebar] [class*="_logoRow"] [class*="_toggle"],
+[data-windows-titlebar] [class*="_sidebarCol"] [class*="_toggle"] {
+  display: none !important;
+}
+html[data-windows-titlebar] {
+  --dsh-windows-menu-start: 144px !important;
+}
+/* 常驻 ⊕ 与宿主浮动钮同形：28px 圆钮 */
+.dsh-navbtn-plus {
+  border-radius: 50%;
+}
+/* v1.1.33：隐藏宿主 newSession 的「收起态标题栏浮动圆钮」变体（防与常驻 ⊕
+   重复）。仅此变体——侧栏展开态的原生胶囊不在收起根内，不受影响。
+   选择器带哈希精确与哈希无关双形态。 */
+[data-windows-titlebar] ._2H3hWW_collapsed ._2H3hWW_newSession,
+[data-windows-titlebar] [class*="_root"][class*="_collapsed"] [class*="_newSession"] {
+  display: none !important;
+}
+/* v1.1.31：隐藏规则作用域收窄到「侧栏列之外」。
+   v1.1.0 的本意只是移除顶部栏 ⊕ 新建会话图标（由固定栏首页接管），但
+   [class*="_newSession"] 连侧栏里的新会话胶囊一起命中。v1.1.28-30 曾用
+   「全局隐藏 + display:flex !important 豁免」恢复胶囊——强制 flex 覆盖了
+   胶囊的原生布局（按钮默认 inline-block + text-align:center 居中），flex
+   容器默认 justify-content:flex-start，图标与文字全部左挤、居中失效。
+   现直接把隐藏作用域排除侧栏列：胶囊（原生展开与托管抽屉）全程不被触碰，
+   display/居中/间距保持宿主原样；顶部栏 ⊕ 不在侧栏列内，照旧隐藏。
+   :not() 复合选择器需 Chromium 88+（宿主 Electron 远高于此）。 */
+[data-windows-titlebar] ._2H3hWW_newSession:not([class*="_sidebarCol"] *),
+[data-windows-titlebar] [class*="_newSession"]:not([class*="_sidebarCol"] *) {
+  display: none !important;
+}
+
+/* 侧栏第二列里的原生全局面板行（插件/定时任务）由固定栏接管，隐藏避免重复 */
+._2H3hWW_panelList,
+[class*="_panelList"] {
+  display: none !important;
+}
+
+#dsh-ui-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  /* 1001：高于设置等模态遮罩（原生 Modal z=1000，视频里设置视图固定栏常亮），
+     低于原生菜单/气泡（z=1100）与自家弹层，不遮挡任何下拉。 */
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 浅色主题固定底色（用户指定 #f5f5f5）；深色仍跟随宿主侧栏填充 */
+  background: #f5f5f5;
+  user-select: none;
+  font-family: inherit;
+}
+
+body[data-ds-dark-theme] #dsh-ui-rail {
+  background: var(--dsw-specific-sidebar-fill, #1c1c1e);
+}
+
+.dsh-rail-dragzone {
+  width: 100%;
+  height: var(--dsh-windows-titlebar-height, 48px);
+  flex: none;
+  -webkit-app-region: drag;
+}
+
+.dsh-rail-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-top: 10px;
+  flex: none;
+}
+
+.dsh-rail-spacer {
+  flex: 1 1 auto;
+  min-height: 12px;
+}
+
+.dsh-rail-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--dsw-alias-label-secondary, #5d5d5d);
+  padding: 0;
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.dsh-rail-btn:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+  color: var(--dsw-alias-label-primary, #0d0d0d);
+}
+
+.dsh-rail-btn.active {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+  color: var(--dsw-alias-label-primary, #0d0d0d);
+}
+
+/* 用户双态图标（首页/自动化任务/插件）：未点击 #C5C5C5，悬停只加底不变色，选中切换实心并变主色 */
+.dsh-rail-btn.dsh-rail-btn-custom {
+  color: #C5C5C5;
+}
+
+.dsh-rail-btn.dsh-rail-btn-custom:hover {
+  color: #C5C5C5;
+}
+
+.dsh-rail-btn.dsh-rail-btn-custom.active {
+  color: var(--dsw-alias-label-primary, #0d0d0d);
+}
+
+.dsh-rail-btn svg {
+  display: block;
+  pointer-events: none;
+}
+
+/* 悬停黑色胶囊 tooltip（视频同款，出现在图标右侧） */
+.dsh-rail-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.96);
+  background: #0d0d0d;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease 0.45s, transform 0.12s ease 0.45s;
+  z-index: 40;
+}
+
+.dsh-rail-btn:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* 无 data-tip 的按钮（如头像）完全不渲染提示框 */
+.dsh-rail-btn:not([data-tip])::after {
+  content: none;
+}
+
+/* 首页按钮在「侧栏收起（悬浮卡片展开）」、托管模式期间、或抽屉开启时，彻底隐藏黑色悬浮提示框，避免遮挡卡片 */
+html:has([data-sidebar-collapsed]) .dsh-rail-btn[data-rail-action="home"]::after,
+body:has([data-sidebar-collapsed]) .dsh-rail-btn[data-rail-action="home"]::after,
+html.dsh-native-host-mode .dsh-rail-btn[data-rail-action="home"]::after,
+body:has(.dsh-native-host) .dsh-rail-btn[data-rail-action="home"]::after,
+.dsh-rail-btn[data-rail-action="home"].dsh-suppress-tip::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 底部头像：锁死正圆（50% 圆角 + 固定 1:1 尺寸），防止原生/其他规则
+   把按钮或图片改写为圆角方块。
+   注意：#dsh-ui-rail 是 position:fixed，其子元素可能被 Chromium 提升为
+   合成层——合成层位图上 border-radius 计算值虽在、绘制却不裁剪（表现即
+   "照片是圆角方块"）。因此按钮与图片统一叠加 clip-path: circle()，它在
+   合成器层面做蒙版，不受该问题影响。 */
+.dsh-rail-avatar-btn {
+  border-radius: 50% !important;
+  clip-path: circle(50% at 50% 50%) !important;
+  overflow: hidden !important;
+  margin-bottom: 12px;
+}
+
+.dsh-rail-avatar-btn.dsh-rail-avatar-btn:hover {
+  border-radius: 50% !important;
+}
+
+.dsh-rail-avatar-img {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  border-radius: 50% !important;
+  clip-path: circle(50% at 50% 50%) !important;
+  object-fit: cover !important;
+  aspect-ratio: 1 / 1 !important;
+  display: block;
+}
+
+.dsh-rail-avatar-fallback {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  border-radius: 50% !important;
+  clip-path: circle(50% at 50% 50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--dsw-alias-label-secondary, #5d5d5d);
+}
+
+.dsh-rail-avatar-fallback svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* 固定栏弹出菜单（更多 / 账号，视频同款卡片） */
+.dsh-rail-menu {
+  position: fixed;
+  z-index: 1200;
+  width: 264px;
+  box-sizing: border-box;
+  background: var(--dsw-alias-bg-layer-2, #ffffff);
+  border: 1px solid var(--dsw-alias-border-l3, rgba(0, 0, 0, 0.08));
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  animation: dsh-ag-menu-pop-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  font-family: inherit;
+}
+
+.dsh-rail-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 12px;
+}
+
+.dsh-rail-menu-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+  color: var(--dsw-alias-label-secondary, #5d5d5d);
+}
+
+.dsh-rail-menu-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dsh-rail-menu-avatar svg {
+  width: 28px;
+  height: 28px;
+}
+
+.dsh-rail-menu-id {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dsh-rail-menu-name {
+  font-size: 14px;
+  color: var(--dsw-alias-label-primary, #111827);
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dsh-rail-menu-sub {
+  font-size: 12px;
+  color: var(--dsw-alias-label-tertiary, #9ca3af);
+  line-height: 16px;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dsh-rail-menu-sep {
+  height: 1px;
+  background: var(--dsw-alias-border-l3, rgba(0, 0, 0, 0.07));
+  margin: 2px 8px 4px;
+  flex: none;
+}
+
+.dsh-rail-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  color: var(--dsw-alias-label-primary, #111827);
+  text-align: left;
+  box-sizing: border-box;
+  transition: background-color 0.12s ease;
+}
+
+.dsh-rail-menu-item:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.dsh-rail-menu-item svg {
+  flex: none;
+  display: block;
+  color: var(--dsw-alias-label-tertiary, #4b5563);
+}
+
+.dsh-rail-menu-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--dsw-alias-label-tertiary, #9ca3af);
+  flex: none;
+}
+
+.dsh-rail-menu-hint.dsh-rail-menu-chevron {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+  padding-left: 6px;
+  color: var(--dsw-alias-label-tertiary, #9ca3af);
+}
+
+.dsh-rail-menu-hint.dsh-rail-menu-chevron svg {
+  width: 12px;
+  height: 12px;
+}
+
+.dsh-rail-menu-item + .dsh-rail-menu-item .dsh-rail-menu-chevron {
+  margin-left: auto;
+}
+
+.dsh-rail-menu-item .dsh-rail-menu-hint + .dsh-rail-menu-chevron {
+  margin-left: 2px;
+}
+
+/* ==========================================================================
+   14. 固定栏首页「悬浮卡片抽屉」——原生侧栏托管模式 (Native Hosting, v1.1.25)
+
+   hover 首页按钮时不再渲染自绘抽屉，而是把宿主「宽态侧栏」整体套进悬浮卡片
+   壳：品牌行 / 新会话胶囊 / 工作区三入口 / 工作区文件夹 / 会话列表 / 底部设置
+   全部原生渲染（数据、交互、快捷键零复刻，宿主升级自动跟随）。
+   本插件只负责四件事：
+   ① 生命周期：hover/键盘唤起 → layout.toggleSidebar 展开；移出热区收回；
+   ② 卡片壳几何（.dsh-native-host，JS 打在 [class*="_sidebarCol"] 上）：
+      left 6px（离左侧固定栏 6px，与顶部离标题栏 6px 间距完全对齐） / top 标题栏+6 / bottom 14 / width 268 / radius 14 / 边框 / 投影；
+   ③ 防推挤：托管期间把 frame 的 grid-template-columns 用 !important 钉在
+      唤起前记住的「收起态值」，聊天区纹丝不动；
+   ④ 开合 180ms 缓出动画（开=入场；收=先淡出壳再瞬时收回，不闪跳）。
+   ========================================================================== */
+
+/* --- 卡片壳：由 JS 加在宿主侧栏列上 --- */
+.dsh-native-host {
+  position: absolute !important;
+  left: 6px !important;
+  top: calc(var(--dsh-windows-titlebar-height, 48px) + 6px) !important;
+  bottom: 14px !important;
+  width: 268px !important;
+  z-index: 1000 !important;
+  box-sizing: border-box !important;
+  border-radius: 14px !important;
+  border: 1px solid #E5E7EB !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  animation: dsh-native-host-in 180ms cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+}
+@keyframes dsh-native-host-in {
+  from { opacity: 0; transform: translateX(-8px) scale(0.985); }
+}
+
+.dsh-native-host > div,
+.dsh-native-host [class*="_root"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 收起跑法：先给壳加淡出类（180ms，与入场同曲线），动画结束 JS 才真正
+   toggleSidebar 收回——避免「壳先落回停靠位、聊天区被推一下」的闪跳 */
+.dsh-native-host-closing {
+  opacity: 0 !important;
+  transform: translateX(-8px) scale(0.985) !important;
+  transition: opacity 180ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 180ms cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+  pointer-events: none !important;
+}
+
+/* 全局托管模式（JS 打在 <html> 上）期间的辅助压制与防推挤钉扎：
+   核心契约：主框架的 grid-template-columns 必须强行钉死在收起态宽度（第一列 0px），
+   严禁推挤右侧聊天主体！即便 React 重新渲染并把行内样式改写为 240px，
+   CSS !important 规则具有最高特异性，确保聊天区纹丝不动（Overlay 悬浮）。 */
+html.dsh-native-host-mode [class*="_frame"] {
+  grid-template-columns: var(--dsh-pinned-grid-template-columns, 0px minmax(0px, 1fr) 0px) !important;
+  transition: none !important; /* 宿主 grid 模板动画会让聊天区滑动，直接压制 */
+}
+html.dsh-native-host-mode .BynINW_frame,
+body:has(.dsh-native-host) [class*="_frame"],
+body:has(.dsh-native-host) .BynINW_frame {
+  grid-template-columns: var(--dsh-pinned-grid-template-columns, 0px minmax(0px, 1fr) 0px) !important;
+  transition: none !important;
+}
+html.dsh-native-host-mode [class*="_handle"] {
+  display: none !important;    /* 隐藏侧栏拖拽手柄，避免卡片上出现 col-resize 残影 */
+}
+
+/* 托管模式下，中栏圆角保持收起态（左上圆角保留，不被展开态切为直角） */
+html.dsh-native-host-mode .BynINW_centerCol,
+html.dsh-native-host-mode [class*="_centerCol"],
+body:has(.dsh-native-host) .BynINW_centerCol,
+body:has(.dsh-native-host) [class*="_centerCol"] {
+  border-top-left-radius: var(--dsh-windows-content-radius, 16px) !important;
+}
+
+/* 卡片壳内不响应窗口拖拽（宿主侧栏区原生是 drag 区域） */
+.dsh-native-host,
+.dsh-native-host * {
+  -webkit-app-region: no-drag;
+}
+
+/* 深色主题：壳的边框 / 底色 / 投影跟随宿主深色调色板 */
+[data-ds-dark-theme] .dsh-native-host {
+  border-color: #2E3134 !important;
+  background: #1C1E21 !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsh-native-host {
+    animation: none !important;
+  }
+  .dsh-native-host-closing {
+    transition: opacity 120ms linear !important;
+    transform: none !important;
+  }
+}
+
+/* T4 窗口控制区底色：原生 WCO 按钮颜色由 preload 探针读取
+   var(--dsw-specific-sidebar-fill) 后经 windowsAppearance IPC 发给主进程。
+   仅将探针元素上的该变量覆写为 #f5f5f5（浅色主题，S 区不受影响），
+   使整条标题栏（含最小化/最大化/关闭按钮）统一底色 */
+body:not([data-ds-dark-theme]) > span[style*="dsw-specific-sidebar-fill"] {
+  --dsw-specific-sidebar-fill: #f5f5f5;
+}
+
+/* S5 账号菜单统一：收起态下原生 footArea 被 display:none 隐藏（触发器 rect=0），
+   恢复 footArea 渲染，让固定定位的原生触发器在收起态也保持有效几何位置
+   （触发器锚点已由上方规则统一固定，两种状态弹出同一位置的原生账号菜单） */
+html[data-windows-titlebar] .BynINW_frame[data-sidebar-collapsed] [class*="_footArea"],
+html[data-windows-titlebar] [class*="_frame"][data-sidebar-collapsed] [class*="_footArea"] {
+  display: flex !important;
+}
+
+/* S4 用量按钮已并入 R4：原生触发器视觉隐藏但保留几何位置
+   （R4 通过它打开原生用量仪表盘弹窗） */
+[data-windows-titlebar] [class*="_footerActions"] button[aria-label="打开用量统计面板"],
+[data-windows-titlebar] [class*="_footerActions"] [class*="UcfOsa_root"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* S5 账号按钮已并入 R6：原生触发器视觉隐藏但保留几何位置
+   （R6 通过它触发原生账号菜单；收起态 footArea 整体 display:none 时走自制菜单回退） */
+/* S5 账号按钮已并入 R6：原生触发器视觉隐藏（opacity 0 + 禁点击），
+   并在两种状态下都固定定位到同一锚点（固定栏右侧 68px、贴窗口底 10px——视频弹窗位置），
+   使原生账号菜单在展开/收起态弹出在同一位置 */
+[data-windows-titlebar] [class*="_settingsArea"] button[aria-haspopup="menu"] {
+  position: fixed !important;
+  left: 68px !important;
+  bottom: 10px !important;
+  width: 28px !important;
+  height: 28px !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 用量统计独立页面：iframe 填满中央面板 */
+.dsh-usage-page-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--dsw-alias-bg-base, #ffffff);
+}
+
+/* 用量统计兜底弹窗（原生按钮缺失时） */
+.dsh-ui-usage-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: dsh-ag-menu-pop-in 0.12s ease;
+}
+
+.dsh-ui-usage-card {
+  width: min(960px, 92vw);
+  height: min(70vh, 640px);
+  background: var(--dsw-alias-bg-layer-2, #ffffff);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.dsh-ui-usage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--dsw-alias-label-primary, #111827);
+  border-bottom: 1px solid var(--dsw-alias-border-l3, rgba(0, 0, 0, 0.07));
+  flex: none;
+}
+
+.dsh-ui-usage-close {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--dsw-alias-label-secondary, #6b7280);
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.dsh-ui-usage-close:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.dsh-ui-usage-frame {
+  flex: 1;
+  border: 0;
+  width: 100%;
+}
+
+/* v1.1.36：工作区行搜索入口（注入补位，与宿主 searchButton 同形同尺寸，
+   原生搜索渲染时自动让位） */
+.dsh-ag-search-btn {
+  border-radius: var(--dsw-radius-sm, 6px);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  color: inherit;
+  background: 0 0;
+  border: none;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  display: inline-flex;
+}
+
+.dsh-ag-search-btn:hover {
+  background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+/* v1.1.41：托管卡片工作区区头 —— 三个图标（🔍 搜索 / ⇄ 视图选项 / 📁+ 新建工作区）
+   位于区头「右端」，与原生侧边栏一致（用户截图锁定：蓝框 = 图标当时所在位置，
+   红框 = 要求移到的右端空位）。
+
+   宿主源码（`@deepseek-ai/dsh-client-ui-workspace/lib/client.js`）里的真实结构：
+     .sectionHeader = [span.sectionLabel「工作区」] [div.searchSlot（含 🔍）]
+                      [div.headerActions（含 ⇄ / 📁+）]
+   把图标组顶到右端的并不是 justify-content，而是 .searchSlot 的
+   `flex: 1` + `margin-left: auto`（占位被 max-width: 28px 封顶）：
+   自动外边距吸走全部剩余空间，于是 searchSlot 与紧随其后的 headerActions 一并
+   贴到区头右端；此时已无剩余空间，justify-content 不再参与分配。
+
+   v1.1.40 曾把这条规则翻转为 flex-start + margin-left: 0，等于亲手取消了这枚
+   「右顶」自动外边距——三个图标于是紧贴「工作区」标签排到左侧，正是用户截图里
+   蓝框所示（也是「改了却没变化」的原因）。本版撤销该翻转，并显式补回
+   margin-left: auto，不依赖宿主日后是否仍保留该声明。
+
+   同时保留 v1.1.39 的搜索槽可见性修复：原生在卡片上下文里会把整个 searchSlot
+   收起/隐藏（表现为 🔍 缺失、图标组少一枚宽度），故强制可见并锁 28px 占位。 */
+.dsh-native-host [class*="_sectionHeader"] {
+  justify-content: flex-end !important;
+}
+
+.dsh-native-host [class*="_sectionHeader"] [class*="searchSlot"] {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  flex: none !important;
+  margin-left: auto !important; /* 吸走剩余空间 → 图标组贴区头右端（关键规则） */
+}
+
+.dsh-native-host [class*="_sectionHeader"] [class*="searchSlot"]:not([class*="searchSlotExpanded"]) {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+}
+
+/* 搜索展开态：搜索框吃掉剩余宽度（宿主自适应放宽），标签与图标组让位 */
+.dsh-native-host [class*="_sectionHeader"] [class*="searchSlot"][class*="searchSlotExpanded"] {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 auto !important;
+}
+
+.dsh-native-host [class*="_sectionHeader"] [class*="headerActions"] {
+  flex: none !important;
+}
